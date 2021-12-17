@@ -67,7 +67,7 @@ class ComponentLayout(pcbnew.ActionPlugin):
             logger.removeHandler(logger.handlers[0])
         logger.addHandler(filehandler)
 
-        logger.info(f'Logging to {os.path.join(projdir, "component_layout_plugin.log")}...')
+        logger.info('Logging to {}...'.format(os.path.join(projdir, "component_layout_plugin.log")))
         
         with open(os.path.join(projdir, 'layout.yaml')) as f:
             layout = yaml.load(f.read())
@@ -96,7 +96,7 @@ class ComponentLayout(pcbnew.ActionPlugin):
         for refdes, props in layout.get('components', {}).items():
             mod = pcb.FindModuleByReference(refdes)
             if mod is None:
-                logger.warning(f"Did not find component {refdes} in PCB design")
+                logger.warning("Did not find component {} in PCB design".format(refdes))
                 continue
             
             flip = props.get('flip', False) # Generally, flip means put on the bottom
@@ -120,7 +120,7 @@ class ComponentLayout(pcbnew.ActionPlugin):
 
                     newmod = pcbnew.FootprintLoad(footprint_path, footprint_name)
                     if newmod is None:
-                        logging.error(f"Failed to load footprint {footprint_name} from {footprint_path}")
+                        logging.error("Failed to load footprint {} from {}".format(footprint_name, footprint_path))
                         raise RuntimeError("Failed to load footprint %s from %s" % (footprint_name, footprint_path))
                     pcb.Delete(mod)
 
