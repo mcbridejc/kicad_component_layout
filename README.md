@@ -8,6 +8,14 @@ The `component_layout_plugin.py` file needs to be located into the KiCad script 
 example, on linux, it could go in `~/.kicad/scripting`. Once there, the script should be available
 to run in KiCad under 'Tools -> External Pluging'.
 
+For Windows:
+
+The Windows version of KiCad packages its own internal copy of Python 2.7. To install the required YAML dependency, open a command prompt as administrator and type:
+
+```
+"C:\Program Files\KiCad\bin\python.exe" -m pip install pyyaml==5.2
+```
+
 ## How to use
 
 When run in pcbnew, the plugin reads information about how to position components on the board from
