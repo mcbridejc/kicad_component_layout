@@ -25,6 +25,10 @@ import pcbnew
 import os
 import sys
 import yaml
+try:
+    from yaml import CLoader as Loader, CDumper as Dumper
+except ImportError:
+    from yaml import Loader, Dumper
 
 class StreamToLogger(object):
    """
@@ -50,6 +54,13 @@ class ComponentLayout(pcbnew.ActionPlugin):
         self.show_toolbar_button = True
 
     def Run( self ):
+        # Interface changed between 5.x and 6.x, but we will support either
+        v5_compat = pcbnew.GetBuildVersion().startswith('5')
+        # Handle change in 6.x development branch
+        # TODO: One day this might be released, and that will break this. But
+        # I don't know when, so we'll just have to wait and see...
+        use_vector2 = pcbnew.GetBuildVersion().startswith('6.99')
+
         pcb = pcbnew.GetBoard()
         # In some cases, I have seen KIPRJMOD not set correctly here.
         #projdir = os.environ['KIPRJMOD']
@@ -66,11 +77,12 @@ class ComponentLayout(pcbnew.ActionPlugin):
         while len(logger.handlers) > 0:
             logger.removeHandler(logger.handlers[0])
         logger.addHandler(filehandler)
+        logger.setLevel(logging.DEBUG)
 
         logger.info('Logging to {}...'.format(os.path.join(projdir, "component_layout_plugin.log")))
         
         with open(os.path.join(projdir, 'layout.yaml')) as f:
-            layout = yaml.load(f.read())
+            layout = yaml.load(f.read(), Loader)
         
         logger.info("Executing component_layout_plugin")
         
@@ -94,7 +106,10 @@ class ComponentLayout(pcbnew.ActionPlugin):
             logger.warning("No components field found in layout.yaml")
 
         for refdes, props in layout.get('components', {}).items():
-            mod = pcb.FindModuleByReference(refdes)
+            if v5_compat:
+                mod = pcb.FindModuleByReference(refdes)
+            else:
+                mod = pcb.FindFootprintByReference(refdes)
             if mod is None:
                 logger.warning("Did not find component {} in PCB design".format(refdes))
                 continue
@@ -122,7 +137,7 @@ class ComponentLayout(pcbnew.ActionPlugin):
                     if newmod is None:
                         logging.error("Failed to load footprint {} from {}".format(footprint_name, footprint_path))
                         raise RuntimeError("Failed to load footprint %s from %s" % (footprint_name, footprint_path))
-                    pcb.Delete(mod)
+                    pcb.Remove(mod)
 
                     # Restore original props to the new module
                     newmod.SetReference(ref)
@@ -135,7 +150,12 @@ class ComponentLayout(pcbnew.ActionPlugin):
             if 'location' in props:
                 x = props['location'][0]
                 y = props['location'][1]
-                mod.SetPosition(pcbnew.wxPointMM(x0 + x, y0 + y))
+
+                ## Latest needs a pcbnew.VECTOR2I, 6.0.1 needs wxPoint
+                if use_vector2:
+                    mod.SetPosition(pcbnew.VECTOR2I_MM(x0 + x, y0 + y))
+                else:
+                    mod.SetPosition(pcbnew.wxPointMM(x0 + x, y0 + y))
             
             if flip and not mod.IsFlipped():
                 mod.Flip(mod.GetPosition())

@@ -2,11 +2,23 @@
 
 A python plugin for KiCad to assist with script driven component layout.
 
+## Known issue with 6.0.x
+
+This script is updated to work with KiCad 6.0.1. There were some changes, and
+if you have an old version it will not work -- likely you get will an error
+about missing the 'FindModuleByReference` function. However, there is an unresolved
+issue that causes KiCad to segfault on exit after the script is run. This doesn't
+prevent the script from working, and as far as I can tell, KiCad continues to run
+correctly after running the script until you exit.
+See [this issue](https://gitlab.com/kicad/code/kicad/-/issues/10951).
+
 ## How to install
 
 The `component_layout_plugin.py` file needs to be located into the KiCad script search path. For
-example, on linux, it could go in `~/.kicad/scripting`. Once there, the script should be available
-to run in KiCad under 'Tools -> External Pluging'.
+example, on linux, it could go in `~/.kicad/scripting`. In python 6.0.1 (and later?) you can go to
+`Tools->External Plugins->Open Plugins Directory` to find the location.
+Once there, the script should be available to run in KiCad under 'Tools -> External Pluging', or
+using the button on the toolbar.
 
 For Windows:
 
@@ -56,8 +68,7 @@ schematic in order to restore the footprint.
 2. You have to check the "Re-associate footprints by refdes" option when performing
 the update from schematic. If you don't, it will delete and recreate all the
 components with the footprints in the schematic. You can simply run the plugin again to fix them.
-3. This works with KiCad 5.1.9. It will almost certainly be broken
-when 6.x.x is released, as I know there are some API changes.
+3. This works with KiCad 5.1.9, and with KiCad 6.0.1 (see issue above). It may stop working on future version.
 4. Make sure you do not have any components selected when you run the layout plugin.
 If your layout file changes footprints while components are selected, this causes KiCad
 to crash.
