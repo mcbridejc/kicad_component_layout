@@ -41,7 +41,7 @@ An example layout.yaml file:
     components:
         R1:
             location: [x, y] # mm
-            rotation: [r] # degrees
+            rotation: r # degrees (float)
             flipped: false
             footprint:
                 path: path/to/library.pretty
