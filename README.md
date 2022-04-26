@@ -2,16 +2,6 @@
 
 A python plugin for KiCad to assist with script driven component layout.
 
-## Known issue with 6.0.x
-
-This script is updated to work with KiCad 6.0.1. There were some changes, and
-if you have an old version it will not work -- likely you get will an error
-about missing the 'FindModuleByReference` function. However, there is an unresolved
-issue that causes KiCad to segfault on exit after the script is run. This doesn't
-prevent the script from working, and as far as I can tell, KiCad continues to run
-correctly after running the script until you exit.
-See [this issue](https://gitlab.com/kicad/code/kicad/-/issues/10951).
-
 ## How to install
 
 The `component_layout_plugin.py` file needs to be located into the KiCad script search path. For
@@ -68,7 +58,19 @@ schematic in order to restore the footprint.
 2. You have to check the "Re-associate footprints by refdes" option when performing
 the update from schematic. If you don't, it will delete and recreate all the
 components with the footprints in the schematic. You can simply run the plugin again to fix them.
-3. This works with KiCad 5.1.9, and with KiCad 6.0.1 (see issue above). It may stop working on future version.
+3. This works with KiCad 5.1.9, and with KiCad 6.0.4 -- see below for 6.0.1, and 6.0.2. It may stop working on a future version.
 4. Make sure you do not have any components selected when you run the layout plugin.
 If your layout file changes footprints while components are selected, this causes KiCad
-to crash.
+to crash -- this appears to no longer be an issue in KiCad 6.x.
+
+## Known issue with 6.0.1, 6.0.2
+
+This script is updated to work with KiCad 6.0.1. There were some changes, and
+if you have an old version it will not work -- likely you get will an error
+about missing the 'FindModuleByReference` function. However, there is an unresolved
+issue that causes KiCad to segfault on exit after the script is run. This doesn't
+prevent the script from working, and as far as I can tell, KiCad continues to run
+correctly after running the script until you exit.
+See [this issue](https://gitlab.com/kicad/code/kicad/-/issues/10951).
+
+This was resolved in 6.0.3. 
