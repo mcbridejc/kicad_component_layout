@@ -114,7 +114,7 @@ class ComponentLayout(pcbnew.ActionPlugin):
                 logger.warning("Did not find component {} in PCB design".format(refdes))
                 continue
             
-            flip = props.get('flip', False) # Generally, flip means put on the bottom
+            flip = props.get('flipped', False) # Generally, flip means put on the bottom
             
             if 'footprint' in props:
                 # I think there's no API to map the library nickname to a library
@@ -157,7 +157,7 @@ class ComponentLayout(pcbnew.ActionPlugin):
                 else:
                     mod.SetPosition(pcbnew.wxPointMM(x0 + x, y0 + y))
             
-            if props['flipped'] ^ (mod.IsFlipped()):
+            if flip ^ (mod.IsFlipped()):
                 mod.Flip(mod.GetPosition(), False)
             
             if 'rotation' in props:
