@@ -32,7 +32,7 @@ An example layout.yaml file:
         R1:
             location: [x, y] # mm
             rotation: r # degrees (float)
-            flipped: false
+            flip: false
             footprint:
                 path: path/to/library.pretty
                 name: SomeFootprint
