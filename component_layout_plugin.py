@@ -158,7 +158,10 @@ class ComponentLayout(pcbnew.ActionPlugin):
                     mod.SetPosition(pcbnew.wxPointMM(x0 + x, y0 + y))
             
             if flip ^ (mod.IsFlipped()):
-                mod.Flip(mod.GetPosition(), False)
+                if v5_compat:
+                    mod.Flip(mod.GetPosition())
+                else:
+                    mod.Flip(mod.GetPosition(), False)
             
             if 'rotation' in props:
                 rotation = props['rotation']
