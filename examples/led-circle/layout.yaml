@@ -1,0 +1,42 @@
+components:
+  D1:
+    flip: true
+    location: [0.0, 12.0]
+    rotation: 180.0
+  D10:
+    flip: true
+    location: [-7.053, 9.708]
+    rotation: 504.0
+  D2:
+    flip: true
+    location: [7.053, 9.708]
+    rotation: 216.0
+  D3:
+    flip: true
+    location: [11.413, 3.708]
+    rotation: 252.0
+  D4:
+    flip: true
+    location: [11.413, -3.708]
+    rotation: 288.0
+  D5:
+    flip: true
+    location: [7.053, -9.708]
+    rotation: 324.0
+  D6:
+    flip: true
+    location: [0.0, -12.0]
+    rotation: 360.0
+  D7:
+    flip: true
+    location: [-7.053, -9.708]
+    rotation: 396.0
+  D8:
+    flip: true
+    location: [-11.413, -3.708]
+    rotation: 432.0
+  D9:
+    flip: true
+    location: [-11.413, 3.708]
+    rotation: 468.0
+origin: [200, 80]
