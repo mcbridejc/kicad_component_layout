@@ -57,9 +57,11 @@ class ComponentLayout(pcbnew.ActionPlugin):
         # Interface changed between 5.x and 6.x, but we will support either
         v5_compat = pcbnew.GetBuildVersion().startswith('5')
         # Handle change in 6.x development branch
+        # NOTE: Some builds enclose the version string in parentheses,
+        # so leading parens are removed
         # TODO: One day this might be released, and that will break this. But
         # I don't know when, so we'll just have to wait and see...
-        use_vector2 = pcbnew.GetBuildVersion().startswith('6.99')
+        use_vector2 = pcbnew.GetBuildVersion().lstrip('(').startswith('6.99')
 
         pcb = pcbnew.GetBoard()
         # In some cases, I have seen KIPRJMOD not set correctly here.
