@@ -61,7 +61,8 @@ class ComponentLayout(pcbnew.ActionPlugin):
         # so leading parens are removed
         # TODO: One day this might be released, and that will break this. But
         # I don't know when, so we'll just have to wait and see...
-        use_vector2 = pcbnew.GetBuildVersion().lstrip('(').startswith('6.99')
+        use_vector6 = pcbnew.GetBuildVersion().lstrip('(').startswith('6.99')
+        use_vector7 = pcbnew.GetBuildVersion().lstrip('(').startswith('7')
 
         pcb = pcbnew.GetBoard()
         # In some cases, I have seen KIPRJMOD not set correctly here.
@@ -154,7 +155,7 @@ class ComponentLayout(pcbnew.ActionPlugin):
                 y = props['location'][1]
 
                 ## Latest needs a pcbnew.VECTOR2I, 6.0.1 needs wxPoint
-                if use_vector2:
+                if use_vector6 or use_vector7:
                     mod.SetPosition(pcbnew.VECTOR2I_MM(x0 + x, y0 + y))
                 else:
                     mod.SetPosition(pcbnew.wxPointMM(x0 + x, y0 + y))
