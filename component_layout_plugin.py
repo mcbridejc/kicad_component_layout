@@ -23,12 +23,24 @@ The footprint path is relative to the directory containing the KiCad PCB file.
 import logging
 import pcbnew
 import os
+import re
 import sys
 import yaml
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
 except ImportError:
     from yaml import Loader, Dumper
+
+def kicad_version():
+    """
+    Returns a tuple containing the kicad major and minor version. For example,
+    returns (7, 1) for version 7.1.2.
+    """
+
+    # NOTE: Some builds enclose the version string in parentheses,
+    # so leading parens are removed
+    match = re.match('^\)?(\d+)\.(\d+)', pcbnew.GetBuildVersion())
+    return (int(match[1]), int(match[2]))
 
 class StreamToLogger(object):
    """
@@ -54,14 +66,11 @@ class ComponentLayout(pcbnew.ActionPlugin):
         self.show_toolbar_button = True
 
     def Run( self ):
+        version = kicad_version()
         # Interface changed between 5.x and 6.x, but we will support either
-        v5_compat = pcbnew.GetBuildVersion().startswith('5')
-        # Handle change in 6.x development branch
-        # NOTE: Some builds enclose the version string in parentheses,
-        # so leading parens are removed
-        # TODO: One day this might be released, and that will break this. But
-        # I don't know when, so we'll just have to wait and see...
-        use_vector2 = pcbnew.GetBuildVersion().lstrip('(').startswith('6.99')
+        v5_compat = version[0] == 5
+        # Kicad uses VECTOR2I_MM instead of wxPointMM from 6.99 onwards
+        use_vector2 = (version[0] == 6 and version[1] == 99) or version[0] >= 7
 
         pcb = pcbnew.GetBoard()
         # In some cases, I have seen KIPRJMOD not set correctly here.
